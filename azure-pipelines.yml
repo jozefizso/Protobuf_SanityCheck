@@ -1,0 +1,29 @@
+# Pipeline Documentation:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
+
+strategy:
+  matrix:
+    vs2017:
+      imageName: 'vs2017-win2016'
+    vs2019:
+      imageName: 'windows-latest'
+
+trigger:
+- master
+
+pool:
+  vmImage: $(imageName)
+
+variables:
+  solution: 'ConsoleApp1.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+    restoreNugetPackages: true
+    msbuildArgs: '/t:Build /verbosity:diagnostic'
